@@ -9,6 +9,8 @@ public class SMaintTest
 
         int a = 1;
 
+        int ba = 2;
+
 
 
     }

@@ -5,6 +5,7 @@ package com.enums;
  */
 public enum SCallOrPut
 {
+    NOTHING(-1),
     CALL(1),
     PUT(2);
 
@@ -19,6 +20,15 @@ public enum SCallOrPut
     @Override
     public String toString()
     {
-        return this == CALL ? "CALL" : "PUT";
+        switch (this)
+        {
+            case NOTHING:
+                return "--";
+            case CALL:
+                return "CALL";
+            case PUT:
+                return "PUT";
+        }
+        return "--";
     }
 }

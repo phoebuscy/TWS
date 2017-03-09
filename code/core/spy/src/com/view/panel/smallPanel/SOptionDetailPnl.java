@@ -28,7 +28,7 @@ public class SOptionDetailPnl extends JPanel
 
     private void setDimension()
     {
-        setSize(getDimension(parentDimension,1.0,0.5));
+        setPreferredSize(getDimension(parentDimension,0.5,0.4));
     }
 
 
@@ -37,8 +37,8 @@ public class SOptionDetailPnl extends JPanel
         setLayout(new GridBagLayout());
         SOptionRealTimeInfoPnl callInfoPnl = new SOptionRealTimeInfoPnl(this, 1);
         SOptionRealTimeInfoPnl putInfoPnl = new SOptionRealTimeInfoPnl(this, 2);
-        add(callInfoPnl, new GBC(0, 0).setAnchor(GBC.WEST).setIpad(100, 5).setWeight(10, 10).setFill(GBC.BOTH));
-        add(putInfoPnl, new GBC(1, 0).setAnchor(GBC.EAST).setIpad(100, 5).setWeight(10, 10).setFill(GBC.BOTH));
+        add(callInfoPnl, new GBC(0, 0).setAnchor(GBC.WEST).setIpad(50, 5).setWeight(10, 10).setFill(GBC.BOTH));
+        add(putInfoPnl, new GBC(1, 0).setAnchor(GBC.EAST).setIpad(50, 5).setWeight(10, 10).setFill(GBC.BOTH));
     }
 
 }

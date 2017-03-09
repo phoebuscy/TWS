@@ -27,7 +27,7 @@ public class SSymbolePanel extends JPanel
         setDimension();
         buildGUI();
 
-        setPrice(257.8888, -3.2678);
+        setPrice(257.8888, 3.2678);
     }
 
     private void setDimension()

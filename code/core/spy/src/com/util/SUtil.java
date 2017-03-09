@@ -1,14 +1,35 @@
 package com.util;
 
+import com.struct.ReturnObj;
+
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.math.BigInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static java.awt.Color.gray;
 
 /**
  * Created by 123 on 2016/12/18.
  */
 public class SUtil
 {
+
+    public static void main(String[] args)
+    {
+        String src = "10";
+        String des = "1";
+
+        ReturnObj returnObj = getPercentValStr( src,  des);
+        String ret = (String) returnObj.returnObj;
+
+        double a = Double.parseDouble("2.2");
+        double b = a;
+
+
+    }
 
 
     /**
@@ -100,7 +121,8 @@ public class SUtil
         try
         {
             UIManager.setLookAndFeel(sty);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -113,20 +135,194 @@ public class SUtil
         return btn;
     }
 
-    public static void setColumWidth(JTable table, int width,int height)
+    public static void setColumWidth(JTable table, int width, int height)
     {
-        if(table != null)
+        if (table != null)
         {
             TableColumnModel tableColumnModel = table.getColumnModel();
             int clumCount = tableColumnModel.getColumnCount();
-            for(int i = 0; i < clumCount; i++)
+            for (int i = 0; i < clumCount; i++)
             {
                 tableColumnModel.getColumn(i).setPreferredWidth(width);
             }
             table.setRowHeight(height);
             table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         }
+    }
 
+    public static boolean isStrNull(String str)
+    {
+        return str == null || str.isEmpty();
+    }
+
+    public static boolean isIntNumeric(Object obj)
+    {
+        return obj != null && isIntNumeric(obj.toString());
+    }
+    public static boolean isIntNumeric(String str)
+    {
+        if (!isStrNull(str))
+        {
+            Pattern pattern = Pattern.compile("[-+]?[0-9]*");
+            Matcher isNum = pattern.matcher(str);
+            return isNum.matches();
+        }
+        return false;
+    }
+
+
+    public static boolean isDoubleNumber(Object obj)
+    {
+        return obj != null && isDoubleNumber(obj.toString());
+    }
+
+    public static boolean isDoubleNumber(String str)
+    {
+        if (!isStrNull(str))
+        {
+            Pattern pattern = Pattern.compile("[-+]?[\\d]+\\.[\\d]+");
+            Matcher isDoubleNum = pattern.matcher(str);
+            return isDoubleNum.matches();
+        }
+        return false;
+    }
+
+    public static boolean isIntOrDoubleNumber(Object obj)
+    {
+        return obj != null && isIntOrDoubleNumber(obj.toString());
+    }
+
+    public static boolean isIntOrDoubleNumber(String str)
+    {
+        return isIntNumeric(str) || isDoubleNumber(str);
+    }
+
+    public static ReturnObj getDiffDoubleNumber(String src, String des)
+    {
+        ReturnObj returnObj = new ReturnObj();
+        if (!isStrNull(src) && !isStrNull(des))
+        {
+            if (isIntOrDoubleNumber(src) && isIntOrDoubleNumber(des))
+            {
+                returnObj.setReturnObj(Double.valueOf(Double.parseDouble(des) - Double.parseDouble(src)));
+                returnObj.setSuccess(true);
+            }
+        }
+        return returnObj;
+    }
+
+    public static ReturnObj getDiffIntNumber(String src, String des)
+    {
+        ReturnObj returnObj = new ReturnObj();
+        if (!isStrNull(src) && !isStrNull(des))
+        {
+            if (isIntNumeric(src) && isIntNumeric(des))
+            {
+                returnObj.setReturnObj(Integer.parseInt(des) - Integer.parseInt(src));
+                returnObj.setSuccess(true);
+            }
+        }
+        return returnObj;
+    }
+
+    public static ReturnObj getPercentVal(String src, String des)
+    {
+        ReturnObj returnObj = new ReturnObj();
+        if (!isStrNull(src) && !isStrNull(des))
+        {
+            if (isIntOrDoubleNumber(src) && isIntOrDoubleNumber(des))
+            {
+                returnObj.setReturnObj(Double.parseDouble(des)/Double.parseDouble(src));
+                returnObj.setSuccess(true);
+            }
+        }
+        return returnObj;
+    }
+
+    public static ReturnObj getPercentValStr(String src, String des)
+    {
+        ReturnObj returnObj = new ReturnObj();
+        if (!isStrNull(src) && !isStrNull(des))
+        {
+            if (isIntOrDoubleNumber(src) && isIntOrDoubleNumber(des))
+            {
+                Double percent = Double.parseDouble(des)/Double.parseDouble(src);
+                String strPercent = String.format("%.2f%%",percent*100);
+                returnObj.setReturnObj(strPercent);
+                returnObj.setSuccess(true);
+            }
+        }
+        return returnObj;
+    }
+
+    public static String getPercentValStr(Object obj)
+    {
+        String percnetStr = "--";
+        if(obj != null && isIntOrDoubleNumber(obj))
+        {
+            Double db = Double.valueOf(obj.toString());
+            percnetStr = String.format("%.2f%%",db*100);
+        }
+        return percnetStr;
+    }
+
+    // “dialog”代表字体，1代表样式(1是粗体，0是平常的）15是字号设置字体
+    //price.setFont(new java.awt.Font("Dialog",   1,   15));
+    public static JLabel getShowNumberLabel(Object num,Boolean ifPer,BigInteger bold, BigInteger fontsize , Boolean ifColor)
+    {
+        JLabel label = new JLabel("--");
+        label.setOpaque(true);
+        Integer integer = Integer.valueOf(0);
+        Double db = 0.0;
+        if(isIntNumeric(num))
+        {
+            integer = Integer.valueOf(num.toString());
+            if(ifPer)
+            {
+                label.setText(getPercentValStr(num));
+            }
+            else
+            {
+                label.setText(num.toString());
+            }
+        }
+        else if(isDoubleNumber(num))
+        {
+            db = Double.valueOf(num.toString());
+            if(ifPer)
+            {
+                label.setText(getPercentValStr(num));
+            }
+            else
+            {
+                label.setText(String.format("%.2f", db));
+            }
+        }
+        Font font = label.getFont();
+        font.getSize();
+        int fontBold = (bold != null && bold.intValue() == 1)? 1: 0;  // “dialog”代表字体，1代表样式(1是粗体，0是平常的）15是字号设置字体
+        int ftSize = (fontsize != null) ? fontsize.intValue(): font.getSize();
+        if(bold != null)
+        {
+            label.setFont(new Font("Dialog", fontBold, ftSize));
+        }
+
+        if(ifColor != null && ifColor)
+        {
+            if (integer > 0 || db > 0.0)
+            {
+                label.setForeground(Cst.ReadColor);
+            }
+            else if (integer < 0 || db < 0.0)
+            {
+                label.setForeground(Cst.GreenColor);
+            }
+            else
+            {
+                label.setForeground(Cst.BlackColor);
+            }
+        }
+        return label;
     }
 
 

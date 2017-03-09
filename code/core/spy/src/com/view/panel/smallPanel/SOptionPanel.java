@@ -38,11 +38,11 @@ public class SOptionPanel extends JPanel
         setLayout(new GridBagLayout());
 
         SExpireDatePnl expireDatePanel = new SExpireDatePnl(this);
-        SOptionTablePnl sOptionTablePnl = new SOptionTablePnl(this);
+        SOptionLinkTablePnl sOptionLinkTablePnl = new SOptionLinkTablePnl(this);
 
         add(expireDatePanel,
             new GBC(0, 0).setAnchor(GBC.WEST).setIpad(100, 5).setWeight(10, 2).setFill(GBC.HORIZONTAL));
-        add(sOptionTablePnl,
+        add(sOptionLinkTablePnl,
             new GBC(0, 1).setAnchor(GBC.WEST).setIpad(100, 50).setWeight(10, 10).setFill(GBC.BOTH));
 
 

@@ -25,10 +25,9 @@ public class SOptionRealTimeInfoModel
     private String tradingVol; // 成交量
 
 
-    public SOptionRealTimeInfoModel(SCallOrPut callOrPut)
+    public SOptionRealTimeInfoModel()
     {
-        this.callOrPut = callOrPut;
-
+        this.callOrPut = SCallOrPut.NOTHING;
         obj = ""; // 标的
         expireDate = "";
         operatePrice = "";
@@ -169,10 +168,34 @@ public class SOptionRealTimeInfoModel
     {
         return expireDate;
     }
+    public String getOperatePrice()
+    {
+        return operatePrice;
+    }
 
     public String getRealTimePrice()
     {
         return realTimePrice;
+    }
+    public String getTodayOpenPrice()
+    {
+        return todayOpenPrice;
+    }
+    public String getYestadayClosePrice()
+    {
+        return yestadayClosePrice;
+    }
+    public String getTodayMaxPrice()
+    {
+        return todayMaxPrice;
+    }
+    public String getTodayMinPrice()
+    {
+        return todayMinPrice;
+    }
+    public String getNotCloseCount()
+    {
+        return notCloseCount;
     }
 
     public String getCurSellPrice()

@@ -17,6 +17,8 @@
 
     <modules>
         <module>../core/spy</module>
+        <module>../core/javaclient</module>
+        <module>../core/apidemo</module>
     </modules>
 
     <build>

@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.phoebuscy.twsapi</groupId>
-    <artifactId>twsapi-spy</artifactId>
+    <artifactId>twsapi-javaclient</artifactId>
     <version>${version}</version>
 
     <properties>
@@ -20,19 +20,20 @@
 
         <deploy.output>../../../code/build/output</deploy.output>
 
-        <deploy.par>${deploy.output}/twsapi-client/spy/spy.par</deploy.par>
+        <deploy.par>${deploy.output}/twsapi-client/javaclient/javaclient.par</deploy.par>
 
     </properties>
 
 
     <dependencies>
 
+        <!--
         <dependency>
-            <groupId>com.phoebuscy.twsapi</groupId>
-            <artifactId>twsapi-javaclient</artifactId>
-            <version>${version}</version>
+          <groupId>com.phoebuscy.twsapi</groupId>
+          <artifactId>twsapi-servicecfg</artifactId>
+          <version>${version}</version>
         </dependency>
-
+        -->
 
     </dependencies>
 

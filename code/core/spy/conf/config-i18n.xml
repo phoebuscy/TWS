@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<property>
+    <zh_CN>
+        <entry>key="user.name" label="用户名"</entry>
+        <entry>key="ip" label="ip"</entry>
+        <entry>key="port" label="端口"</entry>
+
+    </zh_CN>
+
+    <en_US>
+        <entry>key="user.name" label="User Name"</entry>
+        <entry>key="ip" label="ip"</entry>
+        <entry>key="port" label="port"</entry>
+
+    </en_US>
+</property>

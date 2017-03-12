@@ -9,8 +9,6 @@ import java.math.BigInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.awt.Color.gray;
-
 /**
  * Created by 123 on 2016/12/18.
  */

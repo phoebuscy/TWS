@@ -16,9 +16,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>../core/spy</module>
+        <module>../core/utils</module>
         <module>../core/javaclient</module>
         <module>../core/apidemo</module>
+        <module>../core/spy</module>
     </modules>
 
     <build>

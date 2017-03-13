@@ -1,11 +1,12 @@
 package com;
 
 import javax.swing.*;
-import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static com.TPubUtil.notNullAndEmptyArry;
+import static com.TFileUtil.getProjectFileByDoxName;
+import static com.TPubUtil.*;
 import static com.TStringUtil.notNullAndEmptyStr;
 
 /**
@@ -13,61 +14,72 @@ import static com.TStringUtil.notNullAndEmptyStr;
  */
 public class TIconUtil
 {
+    private static Map<String, Icon> iconMap;
 
     public static void main(String[] args)
     {
-        String path = "C:\\GitHubProj\\twsapi-client\\spy\\spy.par\\res\\picture";
+        Icon icon = getProjIcon("disconnic");
+        Icon icon1 = getProjIcon("img0.png");
+        int a = 1;
+    }
 
-        File file = new File(path);
-        File[] tempList = file.listFiles();
-        System.out.println("该目录下对象个数：" + tempList.length);
-        for (int i = 0; i < tempList.length; i++)
+    public static Icon getProjIcon(final String iconName)
+    {
+        if(nullOrEmptyMap(iconMap))
         {
-            if (tempList[i].isFile())
-            {
-                System.out.println("文     件：" + tempList[i].toString());
-                String name = tempList[i].getName();
-                System.out.println("name: " + name);
-                String[] nameArr = name.split("\\.");
-                System.out.println("pre  :" + nameArr[0] + "   next : " + nameArr[1]);
-            }
-            if (tempList[i].isDirectory())
-            {
-                System.out.println("文件夹：" + tempList[i]);
-            }
+            iconMap = getIconSource();
         }
+
+        return iconMap.get(getFileNameWithNoDox(iconName));
+    }
+
+    private static String getFileNameWithNoDox(final String name)
+    {
+        if(notNullAndEmptyStr(name) && name.contains("."))
+        {
+            return name.substring(0,name.indexOf("."));
+        }
+        return name;
     }
 
 
-    public static Map<String, Icon> getIconSource(String iconPath)
+    private static Map<String, Icon> getIconSource()
     {
+        List<String> fileLst = getProjectFileByDoxName("png");
         Map<String, Icon> iconMap = new HashMap<>();
-        if (notNullAndEmptyStr(iconPath))
+
+        if (notNullAndEmptyCollection(fileLst))
         {
-            File file = new File(iconPath);
-            File[] tempList = file.listFiles();
-            if (notNullAndEmptyArry(tempList))
+            for (String file : fileLst)
             {
-                for (int i = 0; i < tempList.length; i++)
+                String name = getNoPathFileName(file);
+                String[] nameArr = name.split("\\.");
+                if (notNullAndEmptyArry(nameArr) && notNullAndEmptyStr(nameArr[0]) && !iconMap.containsKey(nameArr[0]))
                 {
-                    if (tempList[i].isFile())
-                    {
-                        Icon icon = new ImageIcon(tempList[i].toString());
-                        if (icon != null)
-                        {
-                            String name = tempList[i].getName();
-                            String[] nameArr = name.split("\\.");
-                            if (notNullAndEmptyArry(nameArr) && notNullAndEmptyStr(nameArr[0]))
-                            {
-                                iconMap.put(nameArr[0], icon);
-                            }
-                        }
-                    }
+                    Icon icon = new ImageIcon(file);
+                    iconMap.put(nameArr[0], icon);
                 }
             }
         }
 
         return iconMap;
+    }
+
+    private static String getNoPathFileName(final String fileName)
+    {
+        if (notNullAndEmptyStr(fileName))
+        {
+            String sysSep = getSysFileSeparator();
+            String name = replaceToSysFileSeparator(fileName);
+            if (name.contains(sysSep))
+            {
+                return name.substring(name.lastIndexOf(sysSep) + 1, name.length());
+            } else
+            {
+                return name;
+            }
+        }
+        return fileName;
     }
 
 

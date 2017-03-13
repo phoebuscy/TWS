@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static com.TIconUtil.getProjIcon;
 import static com.util.SUtil.getDimension;
 import static com.util.SUtil.isIntOrDoubleNumber;
 
@@ -55,7 +56,7 @@ public class SOperateButtonPnl extends JPanel
 
     private class ChangeOperateButton extends JButton
     {
-        private Icon changeIco = new ImageIcon("source/picture/change.png");
+        private Icon changeIco = getProjIcon("change");
 
         public ChangeOperateButton()
         {
@@ -106,12 +107,12 @@ public class SOperateButtonPnl extends JPanel
 
         private void init()
         {
-            waitIco = new ImageIcon("source/picture/img5.png"); // 还没开仓图标
-            middleIco = new ImageIcon("source/picture/img2.png"); // 收益为0图标
-            gainLittle = new ImageIcon("source/picture/img3.png"); // 盈利
-            gainMore = new ImageIcon("source/picture/img4.png"); // 更盈利
-            lossLittle = new ImageIcon("source/picture/img1.png"); // 亏损一点
-            lossMore = new ImageIcon("source/picture/img0.png");   // 亏损较多
+            waitIco =  getProjIcon("img5");     // 还没开仓图标
+            middleIco = getProjIcon("img2");    // 收益为0图标
+            gainLittle = getProjIcon("img3");   // 盈利
+            gainMore = getProjIcon("img4");     // 更盈利
+            lossLittle = getProjIcon("img1");   // 亏损一点
+            lossMore = getProjIcon("img0");     // 亏损较多
             // “dialog”代表字体，1代表样式(1是粗体，0是平常的）15是字号设置字体
             //price.setFont(new java.awt.Font("Dialog",   1,   15));
             setPreferredSize(new Dimension(100,15));

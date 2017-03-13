@@ -7,7 +7,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**  连接按钮面板
+import static com.TIconUtil.getProjIcon;
+
+/**
+ * 连接按钮面板
  * Created by 123 on 2016/12/19.
  */
 public class SConnectPnl extends JPanel
@@ -36,26 +39,26 @@ public class SConnectPnl extends JPanel
 
     private void setDimension()
     {
-        setSize(SUtil.getDimension(parentDimension,1.0,0.1));
+        setSize(SUtil.getDimension(parentDimension, 1.0, 0.1));
     }
 
 
     private void buildGUI()
     {
-        setLayout(new FlowLayout(FlowLayout.LEFT, 15,0));
+        setLayout(new FlowLayout(FlowLayout.LEFT, 15, 0));
         add(ip);
         add(ipText);
         add(port);
         add(portText);
         add(connectBtn);
         add(connStatus);
-        Icon icon = new ImageIcon("source/picture/disconnicon.png");
+        Icon icon = getProjIcon("disconnicon");
         connStatus.setIcon(icon);
     }
 
     private void setButtonListener()
     {
-        if(connectBtn != null)
+        if (connectBtn != null)
         {
             connectBtn.addActionListener(new ActionListener()
             {
@@ -63,7 +66,7 @@ public class SConnectPnl extends JPanel
                 public void actionPerformed(ActionEvent e)
                 {
                     // 执行链接网关操作
-                    Icon icon = new ImageIcon("source/picture/connicon.png");
+                    Icon icon = getProjIcon("connicon");
                     connStatus.setIcon(icon);
                 }
             });

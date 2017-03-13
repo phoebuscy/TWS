@@ -18,11 +18,33 @@ import static com.TStringUtil.nullOrEmptyStr;
  */
 public class TFileUtil
 {
+    // 配置文件map，key为文件名，value为该文件内容key和value值
+    private static Map<String, Map<String, String>> i18nMap = new HashMap<>();
+
 
     public static void main(String[] args)
     {
-        Map<String, String> i18nmap = getConfigI18n();
+        String port = getConfigValue("port", TConst.CONFIG_I18N_FILE);
+        String ip = getConfigValue("ip",TConst.CONFIG_I18N_FILE);
+        String ipp = getConfigValue("ipp",TConst.CONFIG_I18N_FILE);
+
         int a = 1;
+
+    }
+
+    public static String getConfigValue(final String key, final String fileName)
+    {
+        Map<String, String> contentMap;
+        if (i18nMap.get(fileName) == null)
+        {
+            contentMap = getConfigI18n(fileName);
+            if (notNullAndEmptyMap(contentMap))
+            {
+                i18nMap.put(fileName, contentMap);
+            }
+        }
+        contentMap = i18nMap.get(fileName);
+        return notNullAndEmptyMap(contentMap) ? contentMap.get(key) : null;
 
     }
 
@@ -39,8 +61,7 @@ public class TFileUtil
         try
         {
             filePath = java.net.URLDecoder.decode(url.getPath(), "utf-8");
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -66,8 +87,7 @@ public class TFileUtil
         try
         {
             realPath = java.net.URLDecoder.decode(realPath, "utf-8");
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -118,8 +138,7 @@ public class TFileUtil
         try
         {
             realPath = java.net.URLDecoder.decode(realPath, "utf-8");
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -174,8 +193,7 @@ public class TFileUtil
             path = directory.getCanonicalPath(); //得到的是C:/test/abc
             path = directory.getAbsolutePath();  //得到的是C:/test/abc
             path = directory.getPath();          //得到的是abc
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
         }
         return path;
@@ -201,8 +219,7 @@ public class TFileUtil
         try
         {
             path = directory.getCanonicalPath();
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -232,8 +249,8 @@ public class TFileUtil
             File fileTmp = tempList[i];
             String fileOrDir = tempList[i].toString();
             if (fileDirEnum == TConst.TFileDirEnum.FILE_AND_DIR ||
-                (fileDirEnum == TConst.TFileDirEnum.FILE_FLAG && fileTmp.isFile()) ||
-                (fileDirEnum == TConst.TFileDirEnum.DIR_FLAG && fileTmp.isDirectory()))
+                    (fileDirEnum == TConst.TFileDirEnum.FILE_FLAG && fileTmp.isFile()) ||
+                    (fileDirEnum == TConst.TFileDirEnum.DIR_FLAG && fileTmp.isDirectory()))
             {
                 fileList.add(fileOrDir);
             }
@@ -279,7 +296,7 @@ public class TFileUtil
     public static List<String> getProjectFileByName(final String filename)
     {
         // 用系统路径分隔符号替换文件中的路径分隔符号
-        String rp_fileName = replaceToSysFileSeperate(filename);
+        String rp_fileName = replaceToSysFileSeparator(filename);
         List<String> searchfilelst = new ArrayList<>();
         if (nullOrEmptyStr(rp_fileName))
         {
@@ -337,10 +354,10 @@ public class TFileUtil
         return searchfilelst;
     }
 
-    public static Map<String, String> getConfigI18n()
+    public static Map<String, String> getConfigI18n(final String i18nfile)
     {
         Map<String, String> i18nMap = new HashMap<>();
-        String filename = "spy.par/conf/" + TConst.CONFIG_I18N_FILE;
+        String filename = "spy.par/conf/" + i18nfile;
         List<String> fileLst = getProjectFileByName(filename);
         if (notNullAndEmptyCollection(fileLst))
         {
@@ -352,8 +369,7 @@ public class TFileUtil
             try
             {
                 doc = saxReader.read(file);
-            }
-            catch (DocumentException exc)
+            } catch (DocumentException exc)
             {
                 exc.printStackTrace();
                 return i18nMap;
@@ -373,12 +389,12 @@ public class TFileUtil
                     {
                         Element child = (Element) ite.next();
                         String keyAndLabel = child.getStringValue();  //类似 key="user.name" label="用户名"
-                        if(notNullAndEmptyStr(keyAndLabel))
+                        if (notNullAndEmptyStr(keyAndLabel))
                         {
                             String[] strArray = keyAndLabel.split("\"");
-                            if(notNullAndEmptyArry(strArray) && strArray.length == 4)
+                            if (notNullAndEmptyArry(strArray) && strArray.length == 4)
                             {
-                                if(notNullAndEmptyStr(strArray[1]))
+                                if (notNullAndEmptyStr(strArray[1]))
                                 {
                                     i18nMap.put(strArray[1], strArray[3]);
                                 }

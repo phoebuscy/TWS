@@ -56,7 +56,7 @@ public class TPubUtil
      * @param path 路径
      * @return 换成系统路径分隔符号的路径
      */
-    public static String replaceToSysFileSeperate(final String path)
+    public static String replaceToSysFileSeparator(final String path)
     {
         if(notNullAndEmptyStr(path))
         {
@@ -64,9 +64,19 @@ public class TPubUtil
             String sysPathSepa = java.io.File.separator;  // 系统分隔符
             sysPathSepa = "\\".equals(sysPathSepa)? "\\\\": sysPathSepa;
             String otherSepa = "\\\\".equals(sysPathSepa) ? "/" : "\\\\";
-            return path.replaceAll(otherSepa, sysPathSepa);
+            return rp_path.replaceAll(otherSepa, sysPathSepa);
         }
         return path;
+    }
+
+    /**
+     * 获取系统路径分隔符号
+     * @return
+     */
+    public static String getSysFileSeparator()
+    {
+        return  java.io.File.separator;  // 系统分隔符
+
     }
 
 

@@ -1,5 +1,6 @@
 package com;
 
+import org.dom4j.io.SAXReader;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -24,9 +25,9 @@ public class TFileUtil
 
     public static void main(String[] args)
     {
-        main2(null);
-     //   String port = getConfigValue("port", TConst.CONFIG_I18N_FILE);
-      //  String ip = getConfigValue("ip", TConst.CONFIG_I18N_FILE);
+
+        String port = getConfigValue("port", TConst.CONFIG_I18N_FILE);
+        String ip = getConfigValue("ip", TConst.CONFIG_I18N_FILE);
 
 
         int a = 1;
@@ -355,75 +356,26 @@ public class TFileUtil
         return searchfilelst;
     }
 
+
     public static Map<String, String> getConfigI18n(final String i18nfile)
     {
         Map<String, String> i18nMap = new HashMap<>();
-        /*
         String filename = "spy.par/conf/" + i18nfile;
         List<String> fileLst = getProjectFileByName(filename);
         if (notNullAndEmptyCollection(fileLst))
         {
-            String file = fileLst.get(0);
-            //1.获取SAM接口：
-            SAXReader saxReader = new SAXReader();
-            //2.获取XML文件：
-            Document doc = null;
-            try
-            {
-                doc = saxReader.read(file);
-            } catch (DocumentException exc)
-            {
-                exc.printStackTrace();
-                return i18nMap;
-            }
-            //3.获取根节点：
-            Element root = doc.getRootElement();  // 根节点
-            //获取子节点
-            Iterator<?> it = root.elementIterator();
-            while (it.hasNext())
-            {
-                Element elem = (Element) it.next();
-                if ("zh_CN".equals(elem.getQName().getName()))
-                {
-                    //获取子节的子节点
-                    Iterator<?> ite = elem.elementIterator();
-                    while (ite.hasNext())
-                    {
-                        Element child = (Element) ite.next();
-                        List atrLst = child.attributes();
-                        String keyAndLabel = child.getStringValue();  //类似 key="user.name" label="用户名"
-                        if (notNullAndEmptyStr(keyAndLabel))
-                        {
-                            String[] strArray = keyAndLabel.split("\"");
-                            if (notNullAndEmptyArry(strArray) && strArray.length == 4)
-                            {
-                                if (notNullAndEmptyStr(strArray[1]))
-                                {
-                                    i18nMap.put(strArray[1], strArray[3]);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            filename = fileLst.get(0);
         }
-        */
-        return i18nMap;
-    }
-
-
-    public static void main2(String[] args)
-    {
-
+        else
+        {
+            return i18nMap;
+        }
         try
         {
             //1.创建一个SAXBuilder的对象
             SAXBuilder saxBuilder = new SAXBuilder();
             //2.创建一个输入流，将xml文件加载到输入流中
-            String filename = "spy.par/conf/" + TConst.CONFIG_I18N_FILE;
-            List<String> fileLst = getProjectFileByName(filename);
-
-            InputStream in = new FileInputStream(fileLst.get(0));
+            InputStream in = new FileInputStream(filename);
             InputStreamReader isr = new InputStreamReader(in, "UTF-8");
             //3.通过saxBuilder的build方法，将输入流加载到saxBuilder中
             Document document = saxBuilder.build(isr);
@@ -431,9 +383,13 @@ public class TFileUtil
             Element rootElement = document.getRootElement();
             //5.获取根节点下的子节点的List集合
             List<Element> elementList = rootElement.getChildren();
-
             for (Element element : elementList)
             {
+                Attribute languageAttr = element.getAttribute("language-country");
+                if(languageAttr != null && !"zh_CN".equals(languageAttr.getValue()))
+                {
+                    continue;
+                }
                 // 解析文件的属性集合
                 List<Attribute> list = element.getAttributes();
                 for (Attribute attr : list)
@@ -443,19 +399,19 @@ public class TFileUtil
                     // 获取属性值
                     String attrValue = attr.getValue();
                     System.out.println(attrName + "=" + attrValue);
-
                     // 对book节点的子节点的节点名以及节点值的遍历
                     List<Element> listChild = element.getChildren();
                     for (Element child : listChild)
                     {
-                        System.out.println(child.getName() + "=" + child.getValue());
+                        Attribute keyAttr = child.getAttribute("label-key");
+                        Attribute valAttr = child.getAttribute("label-value");
+                        if(keyAttr != null && notNullAndEmptyStr(keyAttr.getValue()))
+                        {
+                            i18nMap.put(keyAttr.getValue(),valAttr != null? valAttr.getValue():null);
+                        }
                     }
-
                 }
-                System.out.println("——————————————————————");
             }
-
-
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();
@@ -469,6 +425,7 @@ public class TFileUtil
         {
             e.printStackTrace();
         }
+        return i18nMap;
     }
 
 

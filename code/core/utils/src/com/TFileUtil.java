@@ -1,12 +1,12 @@
 package com;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+import org.jdom2.Attribute;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import static com.TPubUtil.*;
@@ -24,9 +24,10 @@ public class TFileUtil
 
     public static void main(String[] args)
     {
-        String port = getConfigValue("port", TConst.CONFIG_I18N_FILE);
-        String ip = getConfigValue("ip",TConst.CONFIG_I18N_FILE);
-        String ipp = getConfigValue("ipp",TConst.CONFIG_I18N_FILE);
+        main2(null);
+     //   String port = getConfigValue("port", TConst.CONFIG_I18N_FILE);
+      //  String ip = getConfigValue("ip", TConst.CONFIG_I18N_FILE);
+
 
         int a = 1;
 
@@ -357,6 +358,7 @@ public class TFileUtil
     public static Map<String, String> getConfigI18n(final String i18nfile)
     {
         Map<String, String> i18nMap = new HashMap<>();
+        /*
         String filename = "spy.par/conf/" + i18nfile;
         List<String> fileLst = getProjectFileByName(filename);
         if (notNullAndEmptyCollection(fileLst))
@@ -388,6 +390,7 @@ public class TFileUtil
                     while (ite.hasNext())
                     {
                         Element child = (Element) ite.next();
+                        List atrLst = child.attributes();
                         String keyAndLabel = child.getStringValue();  //类似 key="user.name" label="用户名"
                         if (notNullAndEmptyStr(keyAndLabel))
                         {
@@ -404,7 +407,68 @@ public class TFileUtil
                 }
             }
         }
+        */
         return i18nMap;
+    }
+
+
+    public static void main2(String[] args)
+    {
+
+        try
+        {
+            //1.创建一个SAXBuilder的对象
+            SAXBuilder saxBuilder = new SAXBuilder();
+            //2.创建一个输入流，将xml文件加载到输入流中
+            String filename = "spy.par/conf/" + TConst.CONFIG_I18N_FILE;
+            List<String> fileLst = getProjectFileByName(filename);
+
+            InputStream in = new FileInputStream(fileLst.get(0));
+            InputStreamReader isr = new InputStreamReader(in, "UTF-8");
+            //3.通过saxBuilder的build方法，将输入流加载到saxBuilder中
+            Document document = saxBuilder.build(isr);
+            //4.通过document对象获取xml文件的根节点
+            Element rootElement = document.getRootElement();
+            //5.获取根节点下的子节点的List集合
+            List<Element> elementList = rootElement.getChildren();
+
+            for (Element element : elementList)
+            {
+                // 解析文件的属性集合
+                List<Attribute> list = element.getAttributes();
+                for (Attribute attr : list)
+                {
+                    // 获取属性名
+                    String attrName = attr.getName();
+                    // 获取属性值
+                    String attrValue = attr.getValue();
+                    System.out.println(attrName + "=" + attrValue);
+
+                    // 对book节点的子节点的节点名以及节点值的遍历
+                    List<Element> listChild = element.getChildren();
+                    for (Element child : listChild)
+                    {
+                        System.out.println(child.getName() + "=" + child.getValue());
+                    }
+
+                }
+                System.out.println("——————————————————————");
+            }
+
+
+        } catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        } catch (JDOMException e)
+        {
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
 

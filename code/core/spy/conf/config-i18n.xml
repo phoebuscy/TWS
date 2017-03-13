@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<property>
-    <zh_CN>
-        <entry>key="user.name" label="用户名"</entry>
-        <entry>key="ip" label="ip"</entry>
-        <entry>key="port" label="端口"</entry>
+<locales>
+    <locale language-country='zh_CN'>
 
-    </zh_CN>
+        <pair label-key='user.name' label-value='用户名'/>
+        <pair label-key='ip' label-value='ip'/>
+        <pair label-key='port' label-value='端口'/>
+    </locale>
 
-    <en_US>
-        <entry>key="user.name" label="User Name"</entry>
-        <entry>key="ip" label="ip"</entry>
-        <entry>key="port" label="port"</entry>
+    <locale language-country='en_US'>
+        <pair label-key='user.name' label-value='User Name'/>
+        <pair label-key='ip' label-value='ip'/>
+        <pair label-key='port' label-value='port'/>
 
-    </en_US>
-</property>
+    </locale>
+
+</locales>

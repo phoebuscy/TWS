@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.util.Random;
 
 import static com.TFileUtil.getConfigValue;
-import static com.util.SUtil.setColumWidth;
+import static com.SUtil.setColumWidth;
 
 /**
  * Created by caiyong on 2017/1/15.

@@ -1,4 +1,4 @@
-package com.struct;
+package com;
 
 /**
  * Created by caiyong on 2016/12/28.

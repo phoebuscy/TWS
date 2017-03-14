@@ -5,7 +5,7 @@ import com.util.GBC;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.util.SUtil.getDimension;
+import static com.SUtil.getDimension;
 
 /**
  * Created by 123 on 2016/12/24.

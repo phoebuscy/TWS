@@ -1,7 +1,7 @@
 package com.view.panel.smallPanel;
 
 import com.enums.SCallOrPut;
-import com.util.Cst;
+import com.Cst;
 import com.util.GBC;
 
 import javax.swing.*;
@@ -10,8 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static com.TIconUtil.getProjIcon;
-import static com.util.SUtil.getDimension;
-import static com.util.SUtil.isIntOrDoubleNumber;
+import static com.SUtil.getDimension;
+import static com.SUtil.isIntOrDoubleNumber;
 
 /**
  * Created by caiyong on 2016/12/24.

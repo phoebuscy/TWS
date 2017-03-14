@@ -1,6 +1,5 @@
-package com.util;
+package com;
 
-import com.struct.ReturnObj;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;

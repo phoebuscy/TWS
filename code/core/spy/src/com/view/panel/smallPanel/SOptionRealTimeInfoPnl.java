@@ -1,13 +1,13 @@
 package com.view.panel.smallPanel;
 
 import com.model.SOptionRealTimeInfoModel;
-import com.struct.ReturnObj;
+import com.ReturnObj;
 import com.util.GBC;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static com.util.SUtil.*;
+import static com.SUtil.*;
 
 /**
  * Created by caiyong on 2016/12/25.

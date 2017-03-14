@@ -1,6 +1,6 @@
 package com.view.dialog;
 
-import com.util.SUtil;
+import com.SUtil;
 import com.view.panel.STopoFramContentPnl;
 
 import javax.swing.*;

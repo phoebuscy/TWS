@@ -5,6 +5,7 @@ package example.mbassador;
  */
 
 
+import com.ReturnObj;
 import net.engio.mbassy.bus.MessagePublication;
 import net.engio.mbassy.dispatch.HandlerInvocation;
 import net.engio.mbassy.listener.*;
@@ -123,6 +124,14 @@ public class ListenerDefinition
             public boolean accepts(String message, SubscriptionContext context)
             {
                 return message.startsWith("http");
+            }
+        }
+
+        static public class MyBigIntegerfilter implements IMessageFilter<ReturnObj>
+        {
+            public boolean accepts(ReturnObj message, SubscriptionContext context)
+            {
+                return true;
             }
         }
 

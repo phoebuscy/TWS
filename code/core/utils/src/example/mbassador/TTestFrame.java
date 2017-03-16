@@ -1,9 +1,16 @@
 package example.mbassador;
 
+import com.ReturnObj;
+import com.TMbassadorSingleton;
+import net.engio.mbassy.listener.Filter;
 import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.IMessageFilter;
+import net.engio.mbassy.listener.Invoke;
+import net.engio.mbassy.subscription.SubscriptionContext;
 
 import javax.swing.*;
 import java.awt.*;
+import java.math.BigInteger;
 
 import static com.SUtil.getGUIDimension;
 import static com.SUtil.setWindosStyle;
@@ -23,6 +30,7 @@ public class TTestFrame extends JFrame
     public TTestFrame()
     {
         buildTopoFrame();
+        TMbassadorSingleton.getInstance("myfirstBus").subscribe(this);
     }
 
     private void buildTopoFrame()
@@ -40,13 +48,20 @@ public class TTestFrame extends JFrame
     public void synchronousHandler(Object message)
     {
         // do something
-        if(message instanceof String)
+        if (message instanceof String)
         {
             int a = 1;
         }
         int b = 1;
     }
 
+
+    @Handler(filters = {@Filter(ListenerDefinition.FilteringListener.MyBigIntegerfilter.class)})
+    public void bigInterMessage(ReturnObj message)
+    {
+        int a = 1;
+
+    }
 
 
 }

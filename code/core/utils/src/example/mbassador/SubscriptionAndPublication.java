@@ -5,6 +5,7 @@ package example.mbassador;
  */
 
 
+import com.ReturnObj;
 import com.TMbassadorSingleton;
 import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.bus.config.BusConfiguration;
@@ -13,6 +14,7 @@ import net.engio.mbassy.bus.config.IBusConfiguration;
 import net.engio.mbassy.bus.error.IPublicationErrorHandler;
 
 import java.io.File;
+import java.math.BigInteger;
 
 /**
  * @author bennidi
@@ -35,9 +37,11 @@ public class SubscriptionAndPublication
 
     public static void main(String[] args)
     {
+        TTestFrame tTestFrame = new TTestFrame();
+      //  bus.subscribe(tTestFrame);
 
         // Listeners are subscribed by passing them to the #subscribe() method
-        bus.subscribe(new ListenerDefinition.SyncAsyncListener());
+      //  bus.subscribe(new ListenerDefinition.SyncAsyncListener());
 
         // #subscribe() is idem-potent => Multiple calls to subscribe do NOT add the listener more than once (set semantics)
         Object listener = new ListenerDefinition.SyncAsyncListener();
@@ -59,11 +63,15 @@ public class SubscriptionAndPublication
         bus.subscribe(lsn);
         bus.post(new File("/tmp/random.csv")).asynchronously(); // same as above
 
-        bus.subscribe(new TTestFrame());
-        bus.publish("this is for ttesFram");
+      //  bus.subscribe(new TTestFrame());
+      //  bus.publish("this is for ttesFram");
 
-        bus2.subscribe(new TTestFrame());
-        bus2.publish("bus2: this is for ttesFram");
+      //  bus2.subscribe(new TTestFrame());
+      //  bus2.publish("bus2: this is for ttesFram");
+        bus.publish(BigInteger.valueOf(50));
+        bus.publish(BigInteger.valueOf(150));
+
+        bus.publish(new ReturnObj());
 
         int a = 1;
 

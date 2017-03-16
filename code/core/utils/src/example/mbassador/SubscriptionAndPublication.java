@@ -5,6 +5,7 @@ package example.mbassador;
  */
 
 
+import com.TMbassadorSingleton;
 import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.bus.config.BusConfiguration;
 import net.engio.mbassy.bus.config.Feature;
@@ -19,6 +20,7 @@ import java.io.File;
  */
 public class SubscriptionAndPublication
 {
+    /*
 
     static MBassador bus = new MBassador(new BusConfiguration()
                                                  .addFeature(Feature.SyncPubSub.Default())
@@ -27,6 +29,9 @@ public class SubscriptionAndPublication
                                                  .addPublicationErrorHandler(new IPublicationErrorHandler.ConsoleLogger())
                                                  .setProperty(IBusConfiguration.Properties.BusId,
                                                               "global bus")); // this is used for identification in #toString
+                                                              */
+    static MBassador bus = TMbassadorSingleton.getInstance("myfirstBus");
+    static MBassador bus2 = TMbassadorSingleton.getInstance("myfirstBus2");
 
     public static void main(String[] args)
     {
@@ -56,6 +61,10 @@ public class SubscriptionAndPublication
 
         bus.subscribe(new TTestFrame());
         bus.publish("this is for ttesFram");
+
+        bus2.subscribe(new TTestFrame());
+        bus2.publish("bus2: this is for ttesFram");
+
         int a = 1;
 
 

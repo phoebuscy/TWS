@@ -1,20 +1,15 @@
 package example.mbassador;
 
 import com.ReturnObj;
+import com.TBusFilter;
 import com.TMbassadorSingleton;
 import net.engio.mbassy.listener.Filter;
 import net.engio.mbassy.listener.Handler;
-import net.engio.mbassy.listener.IMessageFilter;
-import net.engio.mbassy.listener.Invoke;
-import net.engio.mbassy.subscription.SubscriptionContext;
 
 import javax.swing.*;
 import java.awt.*;
-import java.math.BigInteger;
 
-import static com.SUtil.getGUIDimension;
-import static com.SUtil.setWindosStyle;
-import static com.SUtil.showInScreenCenter;
+import static com.SUtil.*;
 
 /**
  * Created by 123 on 2017/3/14.
@@ -44,8 +39,8 @@ public class TTestFrame extends JFrame
 
     }
 
-    @Handler
-    public void synchronousHandler(Object message)
+    @Handler(filters = {@Filter(TBusFilter.StringFilter.class)})
+    public void synchronousHandler(String message)
     {
         // do something
         if (message instanceof String)
@@ -56,7 +51,7 @@ public class TTestFrame extends JFrame
     }
 
 
-    @Handler(filters = {@Filter(ListenerDefinition.FilteringListener.MyBigIntegerfilter.class)})
+    @Handler(filters = {@Filter(TBusFilter.ReturnObjFilter.class)})
     public void bigInterMessage(ReturnObj message)
     {
         int a = 1;

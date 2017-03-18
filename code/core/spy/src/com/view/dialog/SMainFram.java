@@ -1,6 +1,7 @@
 package com.view.dialog;
 
 import com.SUtil;
+import com.TMbassadorSingleton;
 import com.view.panel.STopoFramContentPnl;
 
 import javax.swing.*;
@@ -20,6 +21,7 @@ public class SMainFram extends JFrame
     public SMainFram()
     {
         buildTopoFrame();
+        TMbassadorSingleton.getInstance("myfirstBus").subscribe(this);
     }
 
     private void buildTopoFrame()

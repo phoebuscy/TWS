@@ -360,7 +360,7 @@ public class TFileUtil
     public static Map<String, String> getConfigI18n(final String i18nfile)
     {
         Map<String, String> i18nMap = new HashMap<>();
-        String filename = "spy.par/conf/" + i18nfile;
+        String filename = "conf/" + i18nfile;
         List<String> fileLst = getProjectFileByName(filename);
         if (notNullAndEmptyCollection(fileLst))
         {

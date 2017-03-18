@@ -1,17 +1,22 @@
 package com.view.panel.smallPanel;
 
-import com.enums.SCallOrPut;
 import com.Cst;
+import com.TMbassadorSingleton;
+import com.enums.SCallOrPut;
 import com.util.GBC;
+import net.engio.mbassy.listener.Filter;
+import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.IMessageFilter;
+import net.engio.mbassy.subscription.SubscriptionContext;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static com.TIconUtil.getProjIcon;
 import static com.SUtil.getDimension;
 import static com.SUtil.isIntOrDoubleNumber;
+import static com.TIconUtil.getProjIcon;
 
 /**
  * Created by caiyong on 2016/12/24.
@@ -33,6 +38,8 @@ public class SOperateButtonPnl extends JPanel
         parentDimension = parentWin.getSize();
         setDimension();
         buildGUI();
+
+        TMbassadorSingleton.getInstance("myfirstBus").subscribe(this);
     }
 
 
@@ -67,11 +74,34 @@ public class SOperateButtonPnl extends JPanel
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    callBtn.setProfit("500.2", "0.25");
-                    putBtn.setProfit("-23", "-0.11");
+                  //  callBtn.setProfit("500.2", "0.25");
+                  //  putBtn.setProfit("-23", "-0.11");
+
+                    // test
+                    TMbassadorSingleton.getInstance("myfirstBus").publish("price:833.4:0.35:13:0.22");
                 }
             });
         }
+    }
+
+    //test
+
+
+    static public class PriceStringFilter implements IMessageFilter<String>
+    {
+        public boolean accepts(String message, SubscriptionContext context)
+        {
+             return message.startsWith("price");
+           // return notNullAndEmptyStr(message);
+        }
+    }
+
+    @Handler(filters = {@Filter(PriceStringFilter.class)})
+    public void processPriceHandler(String message)
+    {
+        callBtn.setProfit("111.2", "0.88");
+        putBtn.setProfit("33", "0.55");
+        int b = 1;
     }
 
     private class OpenCloseButton extends JButton

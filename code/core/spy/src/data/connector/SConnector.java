@@ -61,7 +61,7 @@ public class SConnector implements ApiController.IConnectionHandler
     private void run()
     {
         // make initial connection to local host, port 7496, client id 0, no connection options
-        controller().connect("127.0.0.2", 7496, 111,
+        controller().connect("127.0.0.1", 7496, 111,
                              m_connectionConfiguration.getDefaultConnectOptions() != null ? "" : null);
     }
 

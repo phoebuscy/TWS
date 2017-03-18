@@ -3,6 +3,7 @@ package com.dataModel;
 import com.ib.client.*;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -14,21 +15,41 @@ public class SDataManager implements EWrapper
     EJavaSignal m_signal = new EJavaSignal();
     EClientSocket m_s = new EClientSocket(this, m_signal);
 
+    private static int reqId = 100000;
+
 
     public static void main(String[] args)
     {
-        new SDataManager().run();
+        SDataManager  dmg = new SDataManager(); //.run();
+        dmg.run();
+        dmg.orderTick();
+
+
+    }
+
+    public void orderTick()
+    {
+        reqId++;
+        Contract contract = new Contract();
+        contract.conid(0);
+        contract.symbol("IBM");
+        contract.secType("STK");
+        contract.exchange("SMART");
+        contract.primaryExch("ISLAND");
+        contract.currency("USD");
+        m_s.reqMktData(reqId, contract, "", false, Collections.<TagValue>emptyList());
     }
 
     private void run()
     {
         //m_s.eConnect("localhost", 7497, 0);
-        m_s.eConnect("localhost", 4002, 123);
+        m_s.eConnect("localhost", 4002, 1234);
 
         final EReader reader = new EReader(m_s, m_signal);
 
         reader.start();
 
+        /*
         new Thread()
         {
             public void run()
@@ -61,29 +82,36 @@ public class SDataManager implements EWrapper
                 }
             }
         }.start();
+        */
 
-        m_s.reqSecDefOptParams(0, "IBM", "",/* "",*/ "STK", 8314);
-        try
-        {
-            System.in.read();
-        }
-        catch (IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        m_s.eDisconnect();
+//        m_s.reqSecDefOptParams(0, "IBM", "",/* "",*/ "STK", 8314);
+//        try
+//        {
+//            System.in.read();
+//        }
+//        catch (IOException e)
+//        {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        m_s.eDisconnect();
+
     }
 
     @Override
     public void tickPrice(int tickerId, int field, double price, int canAutoExecute)
     {
+        int tkid = tickerId;
+
 
     }
 
     @Override
     public void tickSize(int tickerId, int field, int size)
     {
+        int tkid = tickerId;
+        int fi = field;
+        int s = size;
 
     }
 

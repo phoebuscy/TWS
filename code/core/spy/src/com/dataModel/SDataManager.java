@@ -1,30 +1,106 @@
 package com.dataModel;
 
-import com.ib.client.*;
+import com.TMbassadorSingleton;
+import com.ib.client.CommissionReport;
+import com.ib.client.Contract;
+import com.ib.client.ContractDetails;
+import com.ib.client.DeltaNeutralContract;
+import com.ib.client.EClientSocket;
+import com.ib.client.EJavaSignal;
+import com.ib.client.EReader;
+import com.ib.client.EWrapper;
+import com.ib.client.Execution;
+import com.ib.client.Order;
+import com.ib.client.OrderState;
+import com.ib.client.SoftDollarTier;
+import com.ib.client.TagValue;
 
+import javax.swing.SwingWorker;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import static com.TConst.AK_CONNECTED;
+import static com.TConst.DATAMAAGER_BUS;
+import static com.TPubUtil.makeAKmsg;
 
 /**
  * Created by caiyong on 2017/2/3.
  */
 public class SDataManager implements EWrapper
 {
+    private static SDataManager instance = new SDataManager();
+    private String m_host;
+    private int m_port;
+    private int m_clientid;
 
-    EJavaSignal m_signal = new EJavaSignal();
-    EClientSocket m_s = new EClientSocket(this, m_signal);
+
+    private EJavaSignal m_signal = new EJavaSignal();
+    private EClientSocket m_client = new EClientSocket(this, m_signal);
 
     private static int reqId = 100000;
 
+    static
+    {
+        TMbassadorSingleton.getInstance(DATAMAAGER_BUS).subscribe(instance);
+    }
+
+    private SDataManager()
+    {
+    }
+
+
+    public static SDataManager getInstance()
+    {
+        return instance;
+    }
+
+    public void connect(String host, int port, int clientid)
+    {
+        m_host = host;
+        m_port = port;
+        m_clientid = clientid;
+
+        if( m_client.isConnected() && m_client.isAsyncEConnect())
+        {
+            return;
+        }
+        SwingWorker swingWorker = new SwingWorker()
+        {
+            @Override
+            protected Object doInBackground() throws Exception
+            {
+                m_client.eConnect(host, port, clientid);
+                processRetMsg();
+                return null;
+            }
+            @Override
+            protected void done()
+            {
+                checkConnect();
+            }
+        };
+        swingWorker.run();
+    }
+
+    private void connectAndProcessRetmsg()
+    {
+        m_client.eConnect(m_host,m_port, m_clientid);
+        processRetMsg();
+    }
+
+    public void disconnect()
+    {
+        m_client.eDisconnect();
+    }
 
     public static void main(String[] args)
     {
-        SDataManager  dmg = new SDataManager(); //.run();
-        dmg.run();
+        SDataManager dmg = new SDataManager();
         dmg.orderTick();
-
-
     }
 
     public void orderTick()
@@ -37,24 +113,42 @@ public class SDataManager implements EWrapper
         contract.exchange("SMART");
         contract.primaryExch("ISLAND");
         contract.currency("USD");
-        m_s.reqMktData(reqId, contract, "", false, Collections.<TagValue>emptyList());
+        m_client.reqMktData(reqId, contract, "", false, Collections.<TagValue>emptyList());
     }
 
-    private void run()
+    private void checkConnect()
     {
-        //m_s.eConnect("localhost", 7497, 0);
-        m_s.eConnect("localhost", 4002, 1234);
+        Runnable runnable = new Runnable()
+        {
+            public void run()
+            {
+                if (m_client.isConnected() || m_client.isAsyncEConnect())
+                {
+                    TMbassadorSingleton.getInstance(DATAMAAGER_BUS).publish(makeAKmsg(AK_CONNECTED, "true"));
+                    m_client.cancelOrder(-100);
+                }
+                else
+                {
+                    TMbassadorSingleton.getInstance(DATAMAAGER_BUS).publish(makeAKmsg(AK_CONNECTED, "false"));
+                    connectAndProcessRetmsg();
+                }
+            }
+        };
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+        // 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间
+        service.scheduleAtFixedRate(runnable, 1, 5, TimeUnit.SECONDS);
 
-        final EReader reader = new EReader(m_s, m_signal);
+    }
 
+    private void processRetMsg()
+    {
+        final EReader reader = new EReader(m_client, m_signal);
         reader.start();
-
-        /*
         new Thread()
         {
             public void run()
             {
-                while (m_s.isConnected())
+                while (m_client.isAsyncEConnect())
                 {
                     m_signal.waitForSignal();
                     try
@@ -80,38 +174,22 @@ public class SDataManager implements EWrapper
                         error(e);
                     }
                 }
+                TMbassadorSingleton.getInstance(DATAMAAGER_BUS).publish(makeAKmsg(AK_CONNECTED, "false"));
             }
         }.start();
-        */
-
-//        m_s.reqSecDefOptParams(0, "IBM", "",/* "",*/ "STK", 8314);
-//        try
-//        {
-//            System.in.read();
-//        }
-//        catch (IOException e)
-//        {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        m_s.eDisconnect();
 
     }
+
 
     @Override
     public void tickPrice(int tickerId, int field, double price, int canAutoExecute)
     {
-        int tkid = tickerId;
-
 
     }
 
     @Override
     public void tickSize(int tickerId, int field, int size)
     {
-        int tkid = tickerId;
-        int fi = field;
-        int s = size;
 
     }
 
@@ -456,13 +534,20 @@ public class SDataManager implements EWrapper
     @Override
     public void connectionClosed()
     {
-
+        if(!m_client.isAsyncEConnect())
+        {
+            TMbassadorSingleton.getInstance(DATAMAAGER_BUS).publish(makeAKmsg(AK_CONNECTED, "false"));
+        }
     }
 
     @Override
     public void connectAck()
     {
-
+        if(m_client.isAsyncEConnect())
+        {
+            m_client.startAPI();
+            TMbassadorSingleton.getInstance(DATAMAAGER_BUS).publish(makeAKmsg(AK_CONNECTED, "true"));
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.view.panel.smallPanel;
 
+import com.dataModel.SDataManager;
 import com.table.SOptionLinkTable;
 import com.util.GBC;
 
@@ -34,40 +35,39 @@ public class SOptionLinkTablePnl extends JPanel
 
     private void setDimension()
     {
-        setSize(getDimension(parentDimension,1.0,0.8));
+        setSize(getDimension(parentDimension, 1.0, 0.8));
     }
 
     private void buildGUI()
     {
-       // setLayout(new BorderLayout());
+        // setLayout(new BorderLayout());
         optionLinkTable = new SOptionLinkTable();
         JScrollPane scrollPane = new JScrollPane(optionLinkTable);
         optionLinkTable.setFillsViewportHeight(true);
 
         setLayout(new GridBagLayout());
-        add(scrollPane, new GBC(0,0).setWeight(10,10).setFill(GBC.BOTH));
-        add(testButton,new GBC(0,1).setIpad(15,5).setAnchor(GBC.CENTER));
-        setPreferredSize(getDimension(parentDimension,0.7,0.8));
+        add(scrollPane, new GBC(0, 0).setWeight(10, 10).setFill(GBC.BOTH));
+        add(testButton, new GBC(0, 1).setIpad(15, 5).setAnchor(GBC.CENTER));
+        setPreferredSize(getDimension(parentDimension, 0.7, 0.8));
     }
 
     private void setTestButtonListener()
     {
-        if(testButton != null)
+        if (testButton != null)
         {
             testButton.addActionListener(new ActionListener()
             {
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                   optionLinkTable.updateData(null);
+                    optionLinkTable.updateData(null);
+                    // test
+                    SDataManager.getInstance().disconnect();
 
                 }
             });
         }
     }
-
-
-
 
 
 }

@@ -1,13 +1,29 @@
 package com.view.panel.smallPanel;
 
 import com.SUtil;
+import com.TMbassadorSingleton;
+import com.dataModel.SDataManager;
+import net.engio.mbassy.listener.Filter;
+import net.engio.mbassy.listener.Handler;
+import net.engio.mbassy.listener.IMessageFilter;
+import net.engio.mbassy.subscription.SubscriptionContext;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static com.TConst.AK_CONNECTED;
+import static com.TConst.DATAMAAGER_BUS;
 import static com.TIconUtil.getProjIcon;
+import static com.TPubUtil.getAKmsg;
 
 /**
  * 连接按钮面板
@@ -23,7 +39,9 @@ public class SConnectPnl extends JPanel
     private JLabel port = new JLabel("Port:");
     private JTextField portText = new JTextField("4002", 5);
     private JButton connectBtn = new JButton("Connect");
-    private JLabel connStatus = new JLabel("Disconnect");
+    private JLabel connStatus = new JLabel(" Disconnected");
+
+    private static int cltid = 888;
 
 
     public SConnectPnl(Component parentWin)
@@ -32,9 +50,11 @@ public class SConnectPnl extends JPanel
         this.parentWin = parentWin;
         parentDimension = parentWin.getSize();
         setDimension();
-
         buildGUI();
         setButtonListener();
+
+        // 订阅消息
+        TMbassadorSingleton.getInstance(DATAMAAGER_BUS).subscribe(this);
     }
 
     private void setDimension()
@@ -65,12 +85,30 @@ public class SConnectPnl extends JPanel
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    // 执行链接网关操作
-                    Icon icon = getProjIcon("connicon");
-                    connStatus.setIcon(icon);
+                    String ip = ipText.getText();
+                    int port = Integer.valueOf(portText.getText());
+                    SDataManager.getInstance().connect(ip, port, cltid++);
                 }
             });
         }
+    }
+
+    static public class connectStatusFilter implements IMessageFilter<String>
+    {
+        @Override
+        public boolean accepts(String msg, SubscriptionContext subscriptionContext)
+        {
+            return msg.startsWith(AK_CONNECTED);
+        }
+    }
+
+    @Handler(filters = {@Filter(connectStatusFilter.class)})
+    private void setConnStatus(String msg)
+    {
+        String isConnected = getAKmsg(AK_CONNECTED, msg);
+        String iconName = "true".equalsIgnoreCase(isConnected) ? "connicon" : "disconnicon";
+        connStatus.setIcon(getProjIcon(iconName));
+        connStatus.setText("connicon".equals(iconName)? " Connected": " Disconnected");
     }
 
 

@@ -29,6 +29,8 @@ public class TFileUtil
         String port = getConfigValue("port", TConst.CONFIG_I18N_FILE);
         String ip = getConfigValue("ip", TConst.CONFIG_I18N_FILE);
 
+        List<String> logprop = getProjectFileByName("log4j.properties");
+
 
         int a = 1;
 

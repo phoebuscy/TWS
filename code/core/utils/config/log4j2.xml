@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration status="error">
+<configuration status="trace">
+
+    <properties>
+        <property name="LOG_HOME">./logs</property>
+        <property name="FILE_NAME">mylog</property>
+        <property name="MESSAGE_FILE_NAME">msginfo</property>
+    </properties>
+
     <!--先定义所有的appender-->
     <appenders>
         <!--这个输出控制台的配置-->
@@ -14,25 +21,44 @@
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
         </File>
 
-        <File name="ERROR" fileName="logs/error.log">
+        <File name="ERROR" fileName="log/error.log">
             <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="%d{yyyy.MM.dd 'at' HH:mm:ss z} %-5level %class{36} %L %M - %msg%xEx%n"/>
         </File>
 
         <!--这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
-        <RollingFile name="RollingFile" fileName="logs/app.log"
+        <RollingFile name="RollingFile" fileName="log/app.log"
                      filePattern="log/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout pattern="%d{yyyy-MM-dd 'at' HH:mm:ss z} %-5level %class{36} %L %M - %msg%xEx%n"/>
             <SizeBasedTriggeringPolicy size="2MB"/>
         </RollingFile>
+
+        <RollingRandomAccessFile name="MessageFile"
+                                 fileName="${LOG_HOME}/${MESSAGE_FILE_NAME}.log"
+                                 filePattern="${LOG_HOME}/$${date:yyyy-MM}/${MESSAGE_FILE_NAME}-%d{yyyy-MM-dd HH-mm}-%i.log">
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+              <!--  <TimeBasedTriggeringPolicy interval="1"/> -->
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20000"/>
+        </RollingRandomAccessFile>
     </appenders>
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <loggers>
+
+        <Logger name="msglog" level="trace" additivity="false">
+            <AppenderRef ref="MessageFile"/>
+        </Logger>
+
         <!--建立一个默认的root的logger-->
         <root level="trace">
             <appender-ref ref="RollingFile"/>
             <appender-ref ref="Console"/>
         </root>
+
+
 
     </loggers>
 </configuration>

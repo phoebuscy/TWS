@@ -5,6 +5,11 @@
         <property name="LOG_HOME">./logs</property>
         <property name="FILE_NAME">mylog</property>
         <property name="MESSAGE_FILE_NAME">msginfo</property>
+
+        <property name="LOG_APP">./logs/applog</property>
+        <property name="LOG_MSG">./logs/msg</property>
+        <property name="APP_LOG_FILE_NAME">applog</property>
+
     </properties>
 
     <!--先定义所有的appender-->
@@ -33,32 +38,51 @@
             <SizeBasedTriggeringPolicy size="2MB"/>
         </RollingFile>
 
-        <RollingRandomAccessFile name="MessageFile"
-                                 fileName="${LOG_HOME}/${MESSAGE_FILE_NAME}.log"
-                                 filePattern="${LOG_HOME}/$${date:yyyy-MM}/${MESSAGE_FILE_NAME}-%d{yyyy-MM-dd HH-mm}-%i.log">
+
+
+        <RollingRandomAccessFile name="datamsg"
+                                 fileName="${LOG_MSG}/${MESSAGE_FILE_NAME}.log"
+                                 filePattern="${LOG_MSG}/$${date:yyyy-MM}/${MESSAGE_FILE_NAME}-%d{yyyy-MM-dd HH-mm}-%i.log">
             <PatternLayout
                     pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
             <Policies>
-              <!--  <TimeBasedTriggeringPolicy interval="1"/> -->
-                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <!--  <TimeBasedTriggeringPolicy interval="1"/> -->
+                <SizeBasedTriggeringPolicy size="2 MB"/>
             </Policies>
             <DefaultRolloverStrategy max="20000"/>
         </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="applog"
+                                 fileName="${LOG_APP}/${APP_LOG_FILE_NAME}.log"
+                                 filePattern="${LOG_APP}/$${date:yyyy-MM}/${MESSAGE_FILE_NAME}-%d{yyyy-MM-dd HH-mm}-%i.log">
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <!--  <TimeBasedTriggeringPolicy interval="1"/> -->
+                <SizeBasedTriggeringPolicy size="2 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20000"/>
+        </RollingRandomAccessFile>
+
+
     </appenders>
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <loggers>
 
-        <Logger name="msglog" level="trace" additivity="false">
-            <AppenderRef ref="MessageFile"/>
+        <Logger name="applog" level="trace" additivity="false">
+            <AppenderRef ref="applog"/>
+        </Logger>
+
+        <Logger name="datamsg" level="trace" additivity="false">
+            <AppenderRef ref="datamsg"/>
         </Logger>
 
         <!--建立一个默认的root的logger-->
         <root level="trace">
-            <appender-ref ref="RollingFile"/>
             <appender-ref ref="Console"/>
+            <appender-ref ref="RollingFile"/>
+
         </root>
-
-
 
     </loggers>
 </configuration>

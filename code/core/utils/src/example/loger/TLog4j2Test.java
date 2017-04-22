@@ -8,28 +8,28 @@ import org.apache.logging.log4j.Logger;
  */
 public class TLog4j2Test
 {
-    private static Logger logger = LogManager.getLogger("msglog");
-    private static Logger logger2 = LogManager.getLogger("");
+    private static Logger LogApp = LogManager.getLogger("applog");
+    private static Logger LogMsg = LogManager.getLogger("datamsg");
 
     public static void main(String[] args)
     {
         int b = 1;
-        for(int i = 0; i < 1000; i++)
+        for(int i = 0; i < 10000; i++)
         {
-            logger.trace("trace level");
-            logger.debug("debug level");
-            logger.info("info level");
-            logger.warn("warn level");
-            logger.error("error level");
-            logger.fatal("fatal level");
+            LogApp.trace("trace level");
+            LogApp.debug("debug level");
+            LogApp.info("info level");
+            LogApp.warn("warn level");
+            LogApp.error("error level");
+            LogApp.fatal("fatal level");
 
 
-            logger2.trace("trace level2");
-            logger2.debug("debug level2");
-            logger2.info("info level2");
-            logger2.warn("warn level2");
-            logger2.error("error level2");
-            logger2.fatal("fatal level2");
+            LogMsg.trace("trace level2");
+            LogMsg.debug("debug level2");
+            LogMsg.info("info level2");
+            LogMsg.warn("warn level2");
+            LogMsg.error("error level2");
+            LogMsg.fatal("fatal level2");
         }
         int a = 1;
     }

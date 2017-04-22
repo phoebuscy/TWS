@@ -53,7 +53,7 @@ public class SConnectPnl extends JPanel
         buildGUI();
         setButtonListener();
 
-        // 订阅消息
+        // 订阅消息总线名称为 DATAMAAGER_BUS 的 消息
         TMbassadorSingleton.getInstance(DATAMAAGER_BUS).subscribe(this);
     }
 
@@ -93,6 +93,7 @@ public class SConnectPnl extends JPanel
         }
     }
 
+    // 消息过滤器
     static public class connectStatusFilter implements IMessageFilter<String>
     {
         @Override
@@ -102,6 +103,7 @@ public class SConnectPnl extends JPanel
         }
     }
 
+   // 连接消息处理器
     @Handler(filters = {@Filter(connectStatusFilter.class)})
     private void setConnStatus(String msg)
     {

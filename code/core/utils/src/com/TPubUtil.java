@@ -98,7 +98,6 @@ public class TPubUtil
     {
         if (notNullAndEmptyStr(attr) && attr.startsWith(akflag + ":"))
         {
-
             return attr.substring(akflag.length() + 1, attr.length());
         }
         return null;

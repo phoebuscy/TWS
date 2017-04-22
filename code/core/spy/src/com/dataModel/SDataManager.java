@@ -14,6 +14,8 @@ import com.ib.client.Order;
 import com.ib.client.OrderState;
 import com.ib.client.SoftDollarTier;
 import com.ib.client.TagValue;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.SwingWorker;
 import java.io.IOException;
@@ -32,6 +34,9 @@ import static com.TPubUtil.makeAKmsg;
  */
 public class SDataManager implements EWrapper
 {
+    private static Logger LogApp = LogManager.getLogger("applog");
+    private static Logger LogMsg = LogManager.getLogger("datamsg");
+
     private static SDataManager instance = new SDataManager();
     private String m_host;
     private int m_port;
@@ -46,6 +51,30 @@ public class SDataManager implements EWrapper
     static
     {
         TMbassadorSingleton.getInstance(DATAMAAGER_BUS).subscribe(instance);
+    }
+
+    public static void main(String[] args)
+    {
+        SDataManager dmg = new SDataManager();
+        dmg.orderTick();
+
+        for(int i = 0; i < 10000; i++)
+        {
+            LogApp.trace("trace level");
+            LogApp.debug("debug level");
+            LogApp.info("info level");
+            LogApp.warn("warn level");
+            LogApp.error("error level");
+            LogApp.fatal("fatal level");
+
+
+            LogMsg.trace("trace level2");
+            LogMsg.debug("debug level2");
+            LogMsg.info("info level2");
+            LogMsg.warn("warn level2");
+            LogMsg.error("error level2");
+            LogMsg.fatal("fatal level2");
+        }
     }
 
     private SDataManager()
@@ -97,11 +126,7 @@ public class SDataManager implements EWrapper
         m_client.eDisconnect();
     }
 
-    public static void main(String[] args)
-    {
-        SDataManager dmg = new SDataManager();
-        dmg.orderTick();
-    }
+
 
     public void orderTick()
     {
